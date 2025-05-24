@@ -44,7 +44,7 @@ void TimeManager::UpdateTime()
 	{
 		SDL_Delay((int)_mMsFrame - _mDeltaTime);
 	}
-	_mLastTime = _mCurrentTime; // or equal with SDL_GetTicks()
+	_mLastTime = _mCurrentTime;
 }
 
 void TimeManager::StartNewTimer(const std::string _name, unsigned int _duration)

@@ -3,6 +3,10 @@
 
 #include "../SDL/include/SDL.h"
 
+enum EKeyState {
+	OFF, Released, Pressed, Hold
+};
+
 
 //! Video class
 /*
@@ -17,14 +21,17 @@ public:
 	//! Reset all pressed keys to false.
 	void ResetKeys();
 
-	//! Saves pressed keys in an integer's array.
-	void SetPressedKeys(int _key);
+	//! Saves pressed keys in an EKeyState's array.
+	void SetPressedKeys(int _keyState);
 
-	//! Saves unpressed keys in an integer's array.
-	void SetReleasedKeys(int _key);
+	//! Gets pressed keys from the EKeyState's array.
+	bool GetPressedKeys(int _keyState);
 
-	//! Gets pressed keys from the integer's array.
-	bool GetPressedKeys(int _key);
+	//! Saves released keys in an EKeyState's array.
+	void SetReleasedKeys(int _keyState);
+
+	//! Gets ON keys from the EKeyState's array.
+	bool GetHoldKeys(int _keyState);
 
 	//! Searches for a controller that has been connected to the system.
 	SDL_GameController* FindController();
@@ -57,10 +64,10 @@ protected:
 	Input(void);
 
 private:	
-	bool					_mIsInitialized;	/*< Bool variable. Used to check if SDL_GameController has been initialized */
-	bool*					_mPressedKeys;		/*< Pressed keys' array. Each key pressed during gameplay will be included in this array */
-	SDL_GameController*		_mGameController;	/*< SDL_GameController object */
-	static Input*			_pInstance;			/*< Singleton instance */
+	bool							_mIsInitialized;	/*< Bool variable. Used to check if SDL_GameController has been initialized */
+	EKeyState*						_mKeysStates;		/*< Keys' values array */
+	SDL_GameController*				_mGameController;	/*< SDL_GameController object */
+	static Input*					_pInstance;			/*< Singleton instance */
 };
 
 #endif

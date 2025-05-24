@@ -135,13 +135,18 @@
     <ClCompile Include="EngineCode\Audio.cpp" />
     <ClCompile Include="EngineCode\Input.cpp" />
     <ClCompile Include="EngineCode\ResourceManager.cpp" />
+    <ClCompile Include="EngineCode\SceneManager.cpp" />
     <ClCompile Include="EngineCode\TimeManager.cpp" />
     <ClCompile Include="EngineCode\tinyxml2.cpp" />
     <ClCompile Include="EngineCode\Video.cpp" />
     <ClCompile Include="GameCode\Camera.cpp" />
+    <ClCompile Include="GameCode\Entity.cpp" />
+    <ClCompile Include="GameCode\Main.cpp" />
     <ClCompile Include="GameCode\Map.cpp" />
     <ClCompile Include="GameCode\Player.cpp" />
-    <ClCompile Include="GameCode\Source.cpp" />
+    <ClCompile Include="GameCode\Scene.cpp" />
+    <ClCompile Include="GameCode\SceneGame.cpp" />
+    <ClCompile Include="GameCode\SceneMain.cpp" />
     <ClCompile Include="GameCode\Tileset.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,13 +155,74 @@
     <ClInclude Include="EngineCode\Helpers.h" />
     <ClInclude Include="EngineCode\Input.h" />
     <ClInclude Include="EngineCode\ResourceManager.h" />
+    <ClInclude Include="EngineCode\SceneManager.h" />
     <ClInclude Include="EngineCode\TimeManager.h" />
     <ClInclude Include="EngineCode\tinyxml2.h" />
     <ClInclude Include="EngineCode\Video.h" />
     <ClInclude Include="GameCode\Camera.h" />
+    <ClInclude Include="GameCode\Entity.h" />
     <ClInclude Include="GameCode\Map.h" />
     <ClInclude Include="GameCode\Player.h" />
+    <ClInclude Include="GameCode\Scene.h" />
+    <ClInclude Include="GameCode\SceneGame.h" />
+    <ClInclude Include="GameCode\SceneMain.h" />
     <ClInclude Include="GameCode\Tileset.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Assets\Textures\UI\Title.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\UI\</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="SDL2.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="SDL2_image.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="SDL2_mixer.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Assets\Textures\PlanetQuarry.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\Player.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Assets\Textures\UI\Arrow.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\UI\</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Assets\Textures\UI\Play.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\UI\</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Assets\Textures\UI\Exit.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\UI\</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\UI\Highscore.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\UI\</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\UI\Options.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\UI\</DestinationFolders>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

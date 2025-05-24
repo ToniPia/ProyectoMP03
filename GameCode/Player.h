@@ -1,15 +1,11 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "../SDL/include/SDL.h"
+#include "Entity.h"
 
-#include "../EngineCode/Defines.h"
-#include "../EngineCode/Helpers.h"
+class Camera;
 
-class Map;
-
-enum _eStates
-{
+enum EState {
 	ST_IDLE, ST_WALK, ST_DIE
 };
 
@@ -18,51 +14,29 @@ enum _eStates
 /*
 	Represents the player's character.
 */
-class Player
+class Player : public Entity
 {
 public:
 	Player(void);
 	~Player(void);
 
-	void	Init();
-	void	Update();
-	void	Render(int _idCharacterTexture);
+	void		Init() override;
+	void		Update();
+	void		Render(int _idCharacterTexture, Camera* _ptrCamera);
 
-	void	SetPosXWorld(int _value) { _mRectWorld.x = _value; };
-	int		GetPosXWorld() { return _mRectWorld.x; };
-	void	SetPosYWorld(int _value) { _mRectWorld.y = _value; };
-	int		GetPosYWorld() { return _mRectWorld.y; };
-	void	SetWidthWorld(int _value) { _mRectWorld.x = _value; };
-	int		GetWidthWorld() { return _mRectWorld.w; };
-	void	SetHeightWorld(int _value) { _mRectWorld.h = _value; };
-	int		GetHeightWorld() { return _mRectWorld.h; };
-	void	SetTextureId(int _value) { _mTextureID = _value; };
-	int		GetTextureId() { return _mTextureID; };
-	void	SetCameraPositionX(int _value) { _mCameraX = _value; };
+	void		SetCurrentLives(int _value) { _mLife = _value; };
+	int			GetCurrentLives() { return _mLife; };
+	void		SetCurrentLives(EState _state) { _mCurrentState = _state; };
+	EState		GetCurrentState() { return _mCurrentState; };
+	void		SetCurrentAnimationIndex(int _index) { _mCurrentAnimationIndex = _index; };
+	int			GetCurrentAnimationIndex() { return _mCurrentAnimationIndex; };
 
-	int		GetCurrentLives() { return _mLife; };
-	int		GetCurrentState() { return _mCurrentState; };
-	int		GetLookDirection() { return _mLookDirection; };
-
-	void	SetWorldPointer(Map* _map);
+	//bool		TrySlideIfBlocked(int _direction);
 
 private:
-	SDL_Rect	_mRectGraphic;
-	SDL_Rect	_mRectWorld;
-	int			_mWorldSizeW;
-	int			_mWorldSizeH;
-	int			_mCameraX;
-	int			_mLife;
-	
-	int			_mTextureID;
-	_eStates	_mCurrentState;
-	float		_mTimeBetweenStates;
-	float		_mTimeBetweenFrames;
-	int			_mLookDirection;
-
-	Map*		_pCurrentWorld;
-
-	bool		CheckCollisionWithWorld(int _direction);
+	int							_mLife;
+	EState						_mCurrentState;
+	int							_mCurrentAnimationIndex;
 };
 
 #endif

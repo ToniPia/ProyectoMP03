@@ -1,6 +1,9 @@
 #include "Player.h"
 
 #include <iostream>
+#include <vector>
+#include <stdlib.h>
+#include <math.h>
 
 #include "../EngineCode/Defines.h"
 #include "../EngineCode/Helpers.h"
@@ -9,31 +12,14 @@
 #include "../EngineCode/Input.h"
 
 #include "Map.h"
-
-int frameCounter = 0;
-int framesPerAnimation[] = { 0, 4, 12 };
-float msPerAnimation[] = { 0.0f, 1000.0f, 3000.0f };
-int walkAnimationSequence[] = { 1, 0, 2, 0 };
-int diePhase = 0;
-int dieAnimationSequence[] = { 0, 1, 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-int spritesPosX[] = { 0, 88, 176, 264, 352, 440, 528, 616, 704 };
-int spritesPosY[] = { 0, 88, 176, 264, 352 };
+#include "Camera.h"
 
 
 Player::Player(void)
 {
-	_mRectGraphic = { 0, 0, 0, 0 };
-	_mRectWorld = { 0, 0, 0, 0 };
-	_mWorldSizeW = 0;
-	_mWorldSizeH = 0;
-	_mCameraX = 0;
 	_mLife = 0;
-	_mTextureID = 0;
 	_mCurrentState = ST_IDLE;
-	_mTimeBetweenStates = 0;
-	_mTimeBetweenFrames = 0;
-	_mLookDirection = 0;
-	_pCurrentWorld = nullptr;
+	_mCurrentAnimationIndex = 0;
 }
 
 Player::~Player(void)
@@ -43,167 +29,95 @@ Player::~Player(void)
 
 void Player::Init()
 {
-	_mRectGraphic = { 0, 0, 88, 88 };
-	_mRectWorld = { 120, 40, 88, 88 };
+	SDL_Rect rectGraphicInit = { 0, 0, 88, 88 };
+	SDL_Rect rectWorldInit = { 116, 40, 88, 88 };
+	SetRectGraphic(rectGraphicInit);
+	SetRectWorld(rectWorldInit);
+
+	SetCurrentAnimation(0);
+	SetTimeBetweenLastFrame(0);
+	SetCurrentSprite(0);
+	SetLookDirection(0);
+
+
 	_mLife = 1;
 	_mCurrentState = ST_IDLE;
-	_mTimeBetweenStates = 0;
-	_mTimeBetweenFrames = 0;
-	_mLookDirection = 0;
+	_mCurrentAnimationIndex = -1;
+
+	AddNewAnimation(Animation{ 4, 200, 0, 0, 88, 88 });
+	AddNewAnimation(Animation{ 4, 200, 0, 88, 88, 88 });
+	AddNewAnimation(Animation{ 4, 200, 0, 176, 88, 88 });
+	AddNewAnimation(Animation{ 4, 200, 0, 264, 88, 88 });
+	AddNewAnimation(Animation{ 9, 200, 0, 352, 88, 88 });
 }
 
 void Player::Update()
 {
-	float deltaTime = TIME_MANAGER->GetDeltaTime();
+	int deltaTime = TIME_MANAGER->GetDeltaTime();
+	bool isMoving = false;
 
-	_mTimeBetweenStates += deltaTime;
-	_mTimeBetweenFrames += deltaTime;
+	// Detectar dirección y priorizar en orden: UP > DOWN > LEFT > RIGHT
+	if (INPUT->GetPressedKeys(SDL_SCANCODE_UP))
+	{
+		SetLookDirection(2);
+		_mCurrentState = ST_WALK;
+		isMoving = true;
+		SetCurrentAnimation(2);
 
-	if (INPUT->GetPressedKeys(SDL_SCANCODE_UP)) //up
+		if (!CheckCollisionWithWorld(UP))//|| TrySlideIfBlocked(UP))
+			SetPosYWorld(GetPosYWorld() - SPEED);
+	}
+	else if (INPUT->GetPressedKeys(SDL_SCANCODE_DOWN))
 	{
-		_mLookDirection = 2;
+		SetLookDirection(0);
+		_mCurrentState = ST_WALK;
+		isMoving = true;
+		SetCurrentAnimation(0);
 
-		if (!CheckCollisionWithWorld(UP))
-		{
-			_mRectWorld.y -= SPEED;
-		}
+		if (!CheckCollisionWithWorld(DOWN))//|| TrySlideIfBlocked(DOWN))
+			SetPosYWorld(GetPosYWorld() + SPEED);
 	}
-	if (INPUT->GetPressedKeys(SDL_SCANCODE_RIGHT)) //right
+	else if (INPUT->GetPressedKeys(SDL_SCANCODE_LEFT))
 	{
-		_mLookDirection = 3;
+		SetLookDirection(1);
+		_mCurrentState = ST_WALK;
+		isMoving = true;
+		SetCurrentAnimation(1);
 
-		if (!CheckCollisionWithWorld(RIGHT))
-		{
-			_mRectWorld.x += SPEED;
-		}
+		if (!CheckCollisionWithWorld(LEFT))//|| TrySlideIfBlocked(LEFT))
+			SetPosXWorld(GetPosXWorld() - SPEED);
 	}
-	else if (INPUT->GetPressedKeys(SDL_SCANCODE_DOWN)) //down
+	else if (INPUT->GetPressedKeys(SDL_SCANCODE_RIGHT))
 	{
-		_mLookDirection = 0;
+		SetLookDirection(3);
+		_mCurrentState = ST_WALK;
+		isMoving = true;
+		SetCurrentAnimation(3);
 
-		if (!CheckCollisionWithWorld(DOWN))
-		{
-			_mRectWorld.y += SPEED;
-		}
+		if (!CheckCollisionWithWorld(RIGHT))//|| TrySlideIfBlocked(RIGHT))
+			SetPosXWorld(GetPosXWorld() + SPEED);
 	}
-	else if (INPUT->GetPressedKeys(SDL_SCANCODE_LEFT)) //left
+	else
 	{
-		_mLookDirection = 1;
-
-		if (!CheckCollisionWithWorld(LEFT))
-		{
-			_mRectWorld.x -= SPEED;
-		}
-	}
-
-	//Limits
-	if (_mRectWorld.y < 0)
-	{
-		_mRectWorld.y = 0;
-	}
-	if (_mRectWorld.x < 0)
-	{
-		_mRectWorld.x = 0;
-	}
-	if ((_mRectWorld.x + _mRectWorld.w) > _mWorldSizeW)
-	{
-		_mRectWorld.x = _mWorldSizeW - _mRectWorld.w;
-	}
-	if ((_mRectWorld.y + _mRectWorld.h) > _mWorldSizeH)
-	{
-		_mRectWorld.y = _mWorldSizeH - _mRectWorld.h;
+		_mCurrentState = ST_IDLE;
 	}
 
-	// P1_IDLE : 0, P1_WALK : 1, P1_BOMB: 2, P1_DIE: 3
-	int action = 0;
+	// Animaciones
+	if (_mCurrentState == ST_WALK)
+	{
+		SetTimeBetweenLastFrame(GetTimeBetweenLastFrame() + deltaTime);
 
-	if (INPUT->GetPressedKeys(SDL_SCANCODE_SPACE))
-	{
-		action = 3;
-	}
-	if (INPUT->GetPressedKeys(SDL_SCANCODE_Z))
-	{
-		action = 2;
-	}
-	if (INPUT->GetPressedKeys(SDL_SCANCODE_UP) || INPUT->GetPressedKeys(SDL_SCANCODE_RIGHT) ||
-		INPUT->GetPressedKeys(SDL_SCANCODE_DOWN) || INPUT->GetPressedKeys(SDL_SCANCODE_LEFT))
-	{
-		action = 1;
+		if (GetTimeBetweenLastFrame() > GetAnimationsVector()[GetCurrentAnimation()].msPerAnimation)
+		{
+			SetTimeBetweenLastFrame(0);
+			SetCurrentSprite((GetCurrentSprite() + 1) % GetAnimationsVector()[GetCurrentAnimation()].framesPerAnimation);
+		}
 	}
 
-	if (_mCurrentState == ST_IDLE)
-	{
-		if (action == 1)
-		{
-			_mTimeBetweenStates = 0;
-			frameCounter = 0;
-			walkAnimationSequence[0];
-			_mCurrentState = ST_WALK;
-			_mTimeBetweenFrames = 0;
-		}
-		else if (action == 2)
-		{
-			//
-		}
-		else if (action == 3)
-		{
-			_mTimeBetweenStates = 0;
-			frameCounter = 0;
-			dieAnimationSequence[0];
-			_mCurrentState = ST_DIE;
-			_mTimeBetweenFrames = 0;
-		}
-	}
-	else if (_mCurrentState == ST_WALK)
-	{
-		if (_mTimeBetweenFrames >= msPerAnimation[ST_WALK] / framesPerAnimation[ST_WALK])
-		{
-			_mTimeBetweenFrames = 0;
-			frameCounter = (frameCounter + 1) % framesPerAnimation[ST_WALK];
-		}
-		if (action == 0)
-		{
-			_mTimeBetweenStates = 0;
-			_mCurrentState = ST_IDLE;
-			_mTimeBetweenFrames = 0;
-		}
-		else if (action == 2)
-		{
-			//
-		}
-		else if (action == 3)
-		{
-			_mTimeBetweenStates = 0;
-			frameCounter = 0;
-			dieAnimationSequence[0];
-			_mCurrentState = ST_DIE;
-			_mTimeBetweenFrames = 0;
-		}
-	}
-	else if (_mCurrentState == ST_DIE)
-	{
-		if (_mTimeBetweenFrames >= msPerAnimation[ST_DIE] / framesPerAnimation[ST_DIE])
-		{
-			_mTimeBetweenFrames = 0;
-			++frameCounter;
-
-			if (frameCounter >= framesPerAnimation[ST_DIE])
-			{
-				frameCounter = framesPerAnimation[ST_DIE] - 1;
-			}
-		}
-		if (frameCounter == 6 && diePhase == 0)
-		{
-			diePhase = 1;
-		}
-		if (frameCounter == framesPerAnimation[ST_DIE] - 1 && diePhase == 1)
-		{
-			_mLife = 0;
-		}
-	}
+	Entity::Update(GetRectWorld());
 }
 
-void Player::Render(int _idCharacterTexture)
+void Player::Render(int _idCharacterTexture, Camera* _ptrCamera)
 {
 	int state = _mCurrentState;
 
@@ -213,76 +127,112 @@ void Player::Render(int _idCharacterTexture)
 	{
 	case ST_IDLE:
 	{
-		_mRectGraphic.y = spritesPosY[_mLookDirection];
+		SetPosXGraphic(0);
+		SetPosYGraphic(GetAnimationsVector()[GetCurrentAnimation()].spritePosY);
 		break;
 	}
 	case ST_WALK:
 	{
-		_mRectGraphic.x = spritesPosX[walkAnimationSequence[frameCounter]];
-		_mRectGraphic.y = spritesPosY[_mLookDirection];
+		SetPosXGraphic(GetAnimationsVector()[GetCurrentAnimation()].spritesPosX + GetAnimationsVector()[GetCurrentAnimation()].spriteWidth * GetCurrentSprite());
+		SetPosYGraphic(GetAnimationsVector()[GetCurrentAnimation()].spritePosY);
 		break;
 	}
 	case ST_DIE:
 	{
-		_mRectGraphic.x = spritesPosX[dieAnimationSequence[frameCounter]];
-		_mRectGraphic.y = spritesPosY[4];
+		SetPosXGraphic(GetAnimationsVector()[GetCurrentAnimation()].spritesPosX + GetAnimationsVector()[GetCurrentAnimation()].spriteWidth * GetCurrentSprite());
+		SetPosYGraphic(GetAnimationsVector()[GetCurrentAnimation()].spritePosY);
 		break;
 	}
 	default:
 		break;
 	}
 
-	VIDEO->RenderTexture(_idCharacterTexture, _mRectGraphic, _mRectWorld);
+	SDL_Rect renderRect = {
+		GetPosXWorld() - _ptrCamera->GetPosX(),
+		GetPosYWorld() - _ptrCamera->GetPosY(),
+		GetWidthWorld(),
+		GetHeightWorld()
+	};
+
+	Entity::Render(_idCharacterTexture, GetRectGraphic(), renderRect);
+
+	/*SDL_SetRenderDrawColor(VIDEO->GetScreenRenderer(), 255, 0, 0, 255);
+	SDL_Rect box = GetCollisionBox();
+	SDL_RenderDrawRect(VIDEO->GetScreenRenderer(), &box);*/
 }
 
-void Player::SetWorldPointer(Map* _map)
+/*
+bool Player::TrySlideIfBlocked(int _direction)
 {
-	_pCurrentWorld = _map;
+	SDL_Rect collisionBox = GetCollisionBox();
+	// Desplazamiento en número de casillas del personaje para comprobar de nuevo si colisiona
+	const int SLIDE_AMOUNT = 4;
 
-	_mWorldSizeW = _pCurrentWorld->GetWidth() * _pCurrentWorld->GetTileWidth();
-	_mWorldSizeH = _pCurrentWorld->GetHeight() * _pCurrentWorld->GetTileHeight();
+	// Centro de la colisión del jugador
+	int playerCenterX = collisionBox.x + collisionBox.w / 2;
+	int playerCenterY = collisionBox.y + collisionBox.h / 2;
+
+	// Coordenadas del tile en el que está el centro del jugador
+	int tileSizeW = GetCurrentWorld()->GetTileWidth();
+	int tileSizeH = GetCurrentWorld()->GetTileHeight();
+
+	int tileX = playerCenterX / tileSizeW;
+	int tileY = playerCenterY / tileSizeH;
+
+	// Posición real del centro de ese tile
+	int tileCenterX = tileX * tileSizeW + tileSizeW / 2;
+	int tileCenterY = tileY * tileSizeH + tileSizeH / 2;
+
+	const int EDGE_THRESHOLD = 12; // Cuánto más cerca del borde que del centro para considerarlo esquina
+
+	if (_direction == RIGHT || _direction == LEFT)
+	{
+		// Solo desliza si el centro Y está alejado del centro del tile
+		int dy = abs(playerCenterY - tileCenterY);
+		if (dy < EDGE_THRESHOLD)
+			return false;
+
+		// Intentar deslizar
+		Point upperCorner = (_direction == RIGHT) ?
+			Point(collisionBox.x + collisionBox.w + SPEED, collisionBox.y - 1) :
+			Point(collisionBox.x - SPEED, collisionBox.y - 1);
+		Point lowerCorner = (_direction == RIGHT) ?
+			Point(collisionBox.x + collisionBox.w + SPEED, collisionBox.y + collisionBox.h + 1) :
+			Point(collisionBox.x - SPEED, collisionBox.y + collisionBox.h + 1);
+
+		if (!GetCurrentWorld()->IsThereCollisionWithTileMap(upperCorner)) {
+			SetPosYWorld(GetPosYWorld() - SLIDE_AMOUNT);
+			return true;
+		}
+		else if (!GetCurrentWorld()->IsThereCollisionWithTileMap(lowerCorner)) {
+			SetPosYWorld(GetPosYWorld() + SLIDE_AMOUNT);
+			return true;
+		}
+	}
+	else if (_direction == UP || _direction == DOWN)
+	{
+		// Solo desliza si el centro X está alejado del centro del tile
+		int dx = abs(playerCenterX - tileCenterX);
+		if (dx < EDGE_THRESHOLD)
+			return false;
+
+		Point leftCorner = (_direction == DOWN) ?
+			Point(collisionBox.x - 1, collisionBox.y + collisionBox.h + SPEED) :
+			Point(collisionBox.x - 1, collisionBox.y - SPEED);
+		Point rightCorner = (_direction == DOWN) ?
+			Point(collisionBox.x + collisionBox.w + 1, collisionBox.y + collisionBox.h + SPEED) :
+			Point(collisionBox.x + collisionBox.w + 1, collisionBox.y - SPEED);
+
+		if (!GetCurrentWorld()->IsThereCollisionWithTileMap(leftCorner)) {
+			SetPosXWorld(GetPosXWorld() - SLIDE_AMOUNT);
+			return true;
+		}
+		else if (!GetCurrentWorld()->IsThereCollisionWithTileMap(rightCorner)) {
+			SetPosXWorld(GetPosXWorld() + SLIDE_AMOUNT);
+			return true;
+		}
+	}
+
+	return false;
 }
-
-bool Player::CheckCollisionWithWorld(int _direction)
-{
-	if (_direction == UP)
-	{
-		Point point1(_mRectWorld.x + 8, _mRectWorld.y + (_mRectWorld.h - _pCurrentWorld->GetTileHeight()) - SPEED);
-		Point point2(_mRectWorld.x + _mRectWorld.w / 2, _mRectWorld.y + (_mRectWorld.h - _pCurrentWorld->GetTileHeight()) - SPEED);
-		Point point3(_mRectWorld.x + _mRectWorld.w - 12, _mRectWorld.y + (_mRectWorld.h - _pCurrentWorld->GetTileHeight()) - SPEED);
-
-		return _pCurrentWorld->IsThereCollisionWithTileMap(point1) ||
-			_pCurrentWorld->IsThereCollisionWithTileMap(point2) ||
-			_pCurrentWorld->IsThereCollisionWithTileMap(point3);
-	}
-	else if (_direction == RIGHT)
-	{
-		Point point1(_mRectWorld.x + _mRectWorld.w - 12 + SPEED, _mRectWorld.y + (_mRectWorld.h - _pCurrentWorld->GetTileHeight()));
-		Point point2(_mRectWorld.x + _mRectWorld.w - 12 + SPEED, _mRectWorld.y + (_mRectWorld.h - _pCurrentWorld->GetTileHeight()) + (_pCurrentWorld->GetTileHeight() / 2));
-		Point point3(_mRectWorld.x + _mRectWorld.w - 12 + SPEED, _mRectWorld.y + _mRectWorld.h - 1);
-
-		return _pCurrentWorld->IsThereCollisionWithTileMap(point1) ||
-			_pCurrentWorld->IsThereCollisionWithTileMap(point2) ||
-			_pCurrentWorld->IsThereCollisionWithTileMap(point3);
-	}
-	else if (_direction == DOWN)
-	{
-		Point point1(_mRectWorld.x + 8, _mRectWorld.y + _mRectWorld.h + SPEED);
-		Point point2(_mRectWorld.x + _mRectWorld.w / 2, _mRectWorld.y + _mRectWorld.h + SPEED);
-		Point point3(_mRectWorld.x + _mRectWorld.w - 40, _mRectWorld.y + _mRectWorld.h + SPEED);
-
-		return _pCurrentWorld->IsThereCollisionWithTileMap(point1) ||
-			_pCurrentWorld->IsThereCollisionWithTileMap(point2) ||
-			_pCurrentWorld->IsThereCollisionWithTileMap(point3);
-	}
-	else if (_direction == LEFT)
-	{
-		Point point1(_mRectWorld.x + 8 - SPEED, _mRectWorld.y + (_mRectWorld.h - _pCurrentWorld->GetTileHeight()));
-		Point point2(_mRectWorld.x - SPEED, _mRectWorld.y + (_mRectWorld.h - _pCurrentWorld->GetTileHeight()) + (_mRectWorld.h - (_mRectWorld.h - _pCurrentWorld->GetTileHeight()) / 2));
-		Point point3(_mRectWorld.x - 12 - SPEED, _mRectWorld.y + _mRectWorld.h - 1);
-
-		return _pCurrentWorld->IsThereCollisionWithTileMap(point1) ||
-			_pCurrentWorld->IsThereCollisionWithTileMap(point2) ||
-			_pCurrentWorld->IsThereCollisionWithTileMap(point3);
-	}
-}
+*/

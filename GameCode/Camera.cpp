@@ -16,6 +16,8 @@ Camera::Camera(void)
 	_mPosY = 0;
 	_mWidth = 0;
 	_mHeight = 0;
+	_mLimitX1 = 0;
+	_mLimitX2 = 0;
 }
 
 Camera::~Camera(void)
@@ -29,20 +31,25 @@ void Camera::Init()
 	_mPosY = 0;
 	_mWidth = SCREEN_W;
 	_mHeight = SCREEN_H;
+	_mLimitX1 = (6 * SCREEN_W) / 10;
+	_mLimitX2 = SCREEN_W / 3;
 }
 
 void Camera::Update(Map* _ptrMap, Player* _ptrPlayer)
 {
-	if (_ptrPlayer->GetPosXWorld() > _mWidth / 2 + _ptrMap->GetTileWidth())
+	if (_ptrMap->GetWidth() > 17)
 	{
-		_mPosX += SPEED;
-		_mPosY += SPEED;
+		if (_ptrPlayer->GetPosXWorld() - _mPosX > _mLimitX1)
+		{
+			_mPosX = _ptrPlayer->GetPosXWorld() - _mLimitX1;
+		}
+		else if (_ptrPlayer->GetPosXWorld() - _mPosX < _mLimitX2)
+		{
+			_mPosX = _ptrPlayer->GetPosXWorld() - _mLimitX2;
+		}
 	}
-	else if (_ptrPlayer->GetPosXWorld() < _mWidth / 2 - _ptrMap->GetTileWidth() * 2)
-	{
-		_mPosX -= SPEED;
-		_mPosY -= SPEED;
-	}
+	//_mPosY += SPEED;
+	//_mPosY -= SPEED;
 
 	if (_mPosX < 0)
 	{
@@ -63,5 +70,4 @@ void Camera::Update(Map* _ptrMap, Player* _ptrPlayer)
 	}
 
 	_ptrMap->SetRenderInitX(_mPosX);
-	_ptrPlayer->SetCameraPositionX(_mPosX);
 }

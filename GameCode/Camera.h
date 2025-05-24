@@ -26,10 +26,15 @@ public:
 	int		GetWidth() { return _mWidth; };
 	void	SetHeight(int _value) { _mHeight = _value; };
 	int		GetHeight() { return _mHeight; };
+	void	SetLimit1X(int _value) { _mLimitX1 = _value; };
+	int		GetLimit1X() { return _mLimitX1; };
+	void	SetLimit2X(int _value) { _mLimitX2 = _value; };
+	int		GetLimit2X() { return _mLimitX2; };
 
 private:
 	int		_mPosX, _mPosY;
 	int		_mWidth, _mHeight;
+	int		_mLimitX1, _mLimitX2;
 };
 
 #endif

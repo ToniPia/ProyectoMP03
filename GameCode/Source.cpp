@@ -4,6 +4,7 @@
 #include "../EngineCode/Helpers.h"
 #include "../EngineCode/ResourceManager.h"
 #include "../EngineCode/TimeManager.h"
+#include "../EngineCode/SceneManager.h"
 #include "../EngineCode/Video.h"
 #include "../EngineCode/Audio.h"
 #include "../EngineCode/Input.h"

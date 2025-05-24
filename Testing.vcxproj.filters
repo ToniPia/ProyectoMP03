@@ -13,11 +13,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Assets">
+      <UniqueIdentifier>{7443a399-4207-4742-9f21-c17333a9f58b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Assets\Textures">
+      <UniqueIdentifier>{b47588ff-213e-4107-8a17-921cf9f397e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Assets\Textures\UI">
+      <UniqueIdentifier>{3ad2d00d-f6a1-4fb0-a877-29002241ae4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameCode\Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EngineCode\Audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,6 +52,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameCode\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCode\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineCode\SceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCode\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCode\SceneMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCode\SceneGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCode\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,5 +110,55 @@
     <ClInclude Include="EngineCode\Helpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EngineCode\SceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCode\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCode\SceneMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCode\SceneGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCode\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="SDL2.dll">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="SDL2_image.dll">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="SDL2_mixer.dll">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\UI\Title.png">
+      <Filter>Resource Files\Assets\Textures\UI</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\PlanetQuarry.png">
+      <Filter>Resource Files\Assets\Textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\Player.png">
+      <Filter>Resource Files\Assets\Textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\UI\Arrow.png">
+      <Filter>Resource Files\Assets\Textures\UI</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\UI\Play.png">
+      <Filter>Resource Files\Assets\Textures\UI</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\UI\Options.png">
+      <Filter>Resource Files\Assets\Textures\UI</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\UI\Highscore.png">
+      <Filter>Resource Files\Assets\Textures\UI</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\UI\Exit.png">
+      <Filter>Resource Files\Assets\Textures\UI</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

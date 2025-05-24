@@ -2,13 +2,15 @@
 
 #include <iostream>
 
+#include "TimeManager.h"
+
 
 Input* Input::_pInstance = nullptr;
 
 Input::Input(void)
 {
 	_mIsInitialized = false;
-	_mPressedKeys = {};
+	_mKeysStates = {};
 	_mGameController = nullptr;
 }
 
@@ -21,23 +23,28 @@ void Input::ResetKeys()
 {
 	for (size_t i = 0; i < SDL_NUM_SCANCODES; i++)
 	{
-		_mPressedKeys[i] = false;
+		_mKeysStates[i] = OFF;
 	}
 }
 
-void Input::SetPressedKeys(int _key)
+void Input::SetPressedKeys(int _keyState)
 {
-	_mPressedKeys[_key] = true;
+	_mKeysStates[_keyState] = Pressed;
 }
 
-void Input::SetReleasedKeys(int _key)
+bool Input::GetPressedKeys(int _keyState)
 {
-	_mPressedKeys[_key] = false;
+	return _mKeysStates[_keyState] == Pressed;
 }
 
-bool Input::GetPressedKeys(int _key)
+void Input::SetReleasedKeys(int _keyState)
 {
-	return _mPressedKeys[_key];
+	_mKeysStates[_keyState] = Released;
+}
+
+bool Input::GetHoldKeys(int _keyState)
+{
+	return _mKeysStates[_keyState] == Hold;
 }
 
 SDL_GameController* Input::FindController()
@@ -69,7 +76,7 @@ void Input::InitInput()
 		}
 		else
 		{
-			this->_mPressedKeys = new bool[SDL_NUM_SCANCODES];
+			this->_mKeysStates = new EKeyState[SDL_NUM_SCANCODES];
 			this->ResetKeys();
 
 			_mIsInitialized = true;
@@ -79,6 +86,14 @@ void Input::InitInput()
 
 void Input::UpdateInput()
 {
+	for (int i = 0; i < SDL_NUM_SCANCODES; i++)
+	{
+		if (_mKeysStates[i] == Released)
+		{
+			_mKeysStates[i] = OFF;
+		}
+	}
+
 	SDL_Event testEvent;
 	while (SDL_PollEvent(&testEvent))
 	{
@@ -91,6 +106,7 @@ void Input::UpdateInput()
 		case SDL_KEYUP:
 			SetReleasedKeys(testEvent.key.keysym.scancode);
 			break;
+
 		default:
 			break;
 		}
