@@ -65,12 +65,10 @@ public:
 	std::vector<Animation>	GetAnimationsVector() { return _mAnimationsVector; };
 	void					SetCurrentSprite(int _sprite) { _mCurrentSprite = _sprite; };
 	int						GetCurrentSprite() { return _mCurrentSprite; };
-	void					SetLookDirection(int _direction) { _mLookDirection = _direction; };
-	int						GetLookDirection() { return _mLookDirection; };
 	Map*					GetCurrentWorld() { return _pCurrentWorld; };
+	void					SetWorldPointer(Map* _map);
 
 	SDL_Rect	GetCollisionBox();
-	void		SetWorldPointer(Map* _map);
 	bool		CheckCollisionWithWorld(int _direction);
 	void		AddNewAnimation(Animation _animation);
 
@@ -85,7 +83,6 @@ private:
 	int							timeBetweenLastFrame;
 	std::vector<Animation>		_mAnimationsVector;
 	int							_mCurrentSprite;
-	int							_mLookDirection;
 
 	Map*						_pCurrentWorld;
 };

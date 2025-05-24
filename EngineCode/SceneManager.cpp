@@ -55,6 +55,7 @@ void SceneManager::Init()
 
 void SceneManager::ChangeScene(_eScenes _nextScene, bool _reInit)
 {
+	//_pScenesVector[_mCurrentScene]->UnloadResources();
 	_pScenesVector[_nextScene]->setReInit(_reInit);
 	_mCurrentScene = _nextScene;
 }

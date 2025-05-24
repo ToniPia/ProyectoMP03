@@ -139,6 +139,7 @@
     <ClCompile Include="EngineCode\TimeManager.cpp" />
     <ClCompile Include="EngineCode\tinyxml2.cpp" />
     <ClCompile Include="EngineCode\Video.cpp" />
+    <ClCompile Include="GameCode\Bomb.cpp" />
     <ClCompile Include="GameCode\Camera.cpp" />
     <ClCompile Include="GameCode\Entity.cpp" />
     <ClCompile Include="GameCode\Main.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="EngineCode\TimeManager.h" />
     <ClInclude Include="EngineCode\tinyxml2.h" />
     <ClInclude Include="EngineCode\Video.h" />
+    <ClInclude Include="GameCode\Bomb.h" />
     <ClInclude Include="GameCode\Camera.h" />
     <ClInclude Include="GameCode\Entity.h" />
     <ClInclude Include="GameCode\Map.h" />
@@ -222,6 +224,12 @@
     <CopyFileToFolders Include="Assets\Textures\UI\Options.png">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\UI\</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Assets\Textures\Bomb1.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\</DestinationFolders>
     </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

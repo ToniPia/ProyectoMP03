@@ -72,6 +72,9 @@
     <ClCompile Include="GameCode\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameCode\Bomb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCode\Audio.h">
@@ -125,6 +128,9 @@
     <ClInclude Include="GameCode\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameCode\Bomb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="SDL2.dll">
@@ -159,6 +165,9 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="Assets\Textures\UI\Exit.png">
       <Filter>Resource Files\Assets\Textures\UI</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\Bomb1.png">
+      <Filter>Resource Files\Assets\Textures</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

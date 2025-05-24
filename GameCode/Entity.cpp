@@ -23,7 +23,6 @@ Entity::Entity(void)
 	timeBetweenLastFrame = 0;
 	_mAnimationsVector.resize(0);
 	_mCurrentSprite = 0;
-	_mLookDirection = 0;
 	_pCurrentWorld = nullptr;
 }
 
@@ -34,7 +33,16 @@ Entity::~Entity(void)
 
 void Entity::Init()
 {
-
+	_mRectGraphic = { 0, 0, 0, 0 };
+	_mRectWorld = { 0, 0, 0, 0 };
+	_mWorldSizeW = 0;
+	_mWorldSizeH = 0;
+	_mTextureID = 0;
+	_mCurrentAnimation = 0;
+	timeBetweenLastFrame = 0;
+	_mAnimationsVector.resize(0);
+	_mCurrentSprite = 0;
+	_pCurrentWorld = nullptr;
 }
 
 void Entity::Update(SDL_Rect _rectWorld)

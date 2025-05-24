@@ -9,6 +9,7 @@ class Map;
 class Tileset;
 class Camera;
 class Player;
+class Bomb;
 
 
 //! SceneGame class
@@ -26,13 +27,19 @@ public:
 	void	Render() override;
 	void	UnloadResources() override;
 
+	void	SetCurrentLevel(int _value) { _mCurrentLevel = _value; };
+	int		GetCurrentLevel() { return _mCurrentLevel; };
+
 private:
+	int						_mCurrentLevel;
+
 	bool					_mAllTexturesLoaded;
 
 	Map*					_pMap;
 	Tileset*				_pTileset;
 	Camera*					_pCamera;
 	Player*					_pPlayer;
+	Bomb*					_pBomb;
 };
 
 #endif

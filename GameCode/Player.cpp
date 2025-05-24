@@ -13,13 +13,17 @@
 
 #include "Map.h"
 #include "Camera.h"
+#include "Bomb.h"
 
 
 Player::Player(void)
 {
 	_mLife = 0;
+	_mLookDirection = 0;
 	_mCurrentState = ST_IDLE;
-	_mCurrentAnimationIndex = 0;
+
+	_mBombQuantity = 0;
+	_pBombs.resize(0);
 }
 
 Player::~Player(void)
@@ -39,10 +43,12 @@ void Player::Init()
 	SetCurrentSprite(0);
 	SetLookDirection(0);
 
-
 	_mLife = 1;
+	_mLookDirection = 0;
 	_mCurrentState = ST_IDLE;
-	_mCurrentAnimationIndex = -1;
+
+	_mBombQuantity = 1;
+	_pBombs.resize(0);
 
 	AddNewAnimation(Animation{ 4, 200, 0, 0, 88, 88 });
 	AddNewAnimation(Animation{ 4, 200, 0, 88, 88, 88 });
@@ -51,15 +57,26 @@ void Player::Init()
 	AddNewAnimation(Animation{ 9, 200, 0, 352, 88, 88 });
 }
 
-void Player::Update()
+void Player::Update(Map* _ptrMap)
 {
 	int deltaTime = TIME_MANAGER->GetDeltaTime();
 	bool isMoving = false;
 
-	// Detectar dirección y priorizar en orden: UP > DOWN > LEFT > RIGHT
-	if (INPUT->GetPressedKeys(SDL_SCANCODE_UP))
+	if (_mBombQuantity > 0 && INPUT->GetPressedKeys(SDL_SCANCODE_Z))
 	{
-		SetLookDirection(2);
+		int tileX = GetPosXWorld();
+		int tileY = GetPosYWorld();
+		if (!IsTileOccupied(tileX, tileY))
+		{
+			Bomb* newBomb = new Bomb(tileX, tileY);
+			newBomb->SetWorldPointer(_ptrMap);
+			_pBombs.push_back(newBomb);
+			_mBombQuantity--;
+		}
+	}
+	else if (INPUT->GetPressedKeys(SDL_SCANCODE_UP))
+	{
+		_mLookDirection = 2;
 		_mCurrentState = ST_WALK;
 		isMoving = true;
 		SetCurrentAnimation(2);
@@ -69,7 +86,7 @@ void Player::Update()
 	}
 	else if (INPUT->GetPressedKeys(SDL_SCANCODE_DOWN))
 	{
-		SetLookDirection(0);
+		_mLookDirection = 0;
 		_mCurrentState = ST_WALK;
 		isMoving = true;
 		SetCurrentAnimation(0);
@@ -79,7 +96,7 @@ void Player::Update()
 	}
 	else if (INPUT->GetPressedKeys(SDL_SCANCODE_LEFT))
 	{
-		SetLookDirection(1);
+		_mLookDirection = 1;
 		_mCurrentState = ST_WALK;
 		isMoving = true;
 		SetCurrentAnimation(1);
@@ -89,7 +106,7 @@ void Player::Update()
 	}
 	else if (INPUT->GetPressedKeys(SDL_SCANCODE_RIGHT))
 	{
-		SetLookDirection(3);
+		_mLookDirection = 3;
 		_mCurrentState = ST_WALK;
 		isMoving = true;
 		SetCurrentAnimation(3);
@@ -102,7 +119,24 @@ void Player::Update()
 		_mCurrentState = ST_IDLE;
 	}
 
-	// Animaciones
+	// Bombs
+	for (auto it = _pBombs.begin(); it != _pBombs.end(); )
+	{
+		(*it)->Update(_ptrMap);
+
+		if ((*it)->GetBombState() && (*it)->BombShouldBeDeleted())
+		{
+			delete* it;
+			it = _pBombs.erase(it);
+			_mBombQuantity++;
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	// Animations
 	if (_mCurrentState == ST_WALK)
 	{
 		SetTimeBetweenLastFrame(GetTimeBetweenLastFrame() + deltaTime);
@@ -114,7 +148,22 @@ void Player::Update()
 		}
 	}
 
+	// For collisions
 	Entity::Update(GetRectWorld());
+
+	for (int i = 0; i < _pBombs.size(); i++)
+	{
+		if (GetPosXWorld() < _pBombs[i]->GetPosXWorld() && 
+			GetPosXWorld() > _pBombs[i]->GetPosXWorld() + 64)
+		{
+			SetPosXWorld(GetPosXWorld());
+		}
+		if (GetPosYWorld() < _pBombs[i]->GetPosYWorld() &&
+			GetPosYWorld() > _pBombs[i]->GetPosYWorld() + 64)
+		{
+			SetPosYWorld(GetPosYWorld());
+		}
+	}
 }
 
 void Player::Render(int _idCharacterTexture, Camera* _ptrCamera)
@@ -159,6 +208,24 @@ void Player::Render(int _idCharacterTexture, Camera* _ptrCamera)
 	/*SDL_SetRenderDrawColor(VIDEO->GetScreenRenderer(), 255, 0, 0, 255);
 	SDL_Rect box = GetCollisionBox();
 	SDL_RenderDrawRect(VIDEO->GetScreenRenderer(), &box);*/
+}
+
+bool Player::IsTileOccupied(int x, int y)
+{
+	int tileX = x / 64;
+	int tileY = y / 64;
+
+	for (auto bomb : _pBombs)
+	{
+		int bombTileX = bomb->GetPosXWorld() / 64;
+		int bombTileY = bomb->GetPosYWorld() / 64;
+
+		if (bombTileX == tileX && bombTileY == tileY)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 /*

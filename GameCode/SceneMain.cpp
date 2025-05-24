@@ -142,4 +142,9 @@ void SceneMain::Render()
 void SceneMain::UnloadResources()
 {
 	RESOURCE_MANAGER->RemoveTexture("Assets/Textures/UI/Title.png");
+	RESOURCE_MANAGER->RemoveTexture("Assets/Textures/UI/Arrow.png");
+	RESOURCE_MANAGER->RemoveTexture("Assets/Textures/UI/Play.png");
+	RESOURCE_MANAGER->RemoveTexture("Assets/Textures/UI/Options.png");
+	RESOURCE_MANAGER->RemoveTexture("Assets/Textures/UI/Highscore.png");
+	RESOURCE_MANAGER->RemoveTexture("Assets/Textures/UI/Exit.png");
 }
