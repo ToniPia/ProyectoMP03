@@ -63,7 +63,7 @@ void SceneGame::Init()
 void SceneGame::Update()
 {
 	for (auto bomb : _pPlayer->GetBombs()) {
-		bomb->Update(_pMap);
+		bomb->Update();
 	}
 	_pPlayer->Update(_pMap);
 	_pCamera->Update(_pMap, _pPlayer);
@@ -73,7 +73,7 @@ void SceneGame::Render()
 {
 	_pMap->Render(_pCamera, _pTileset->GetTextureId());
 	for (auto bomb : _pPlayer->GetBombs()) {
-		bomb->Render(8, _pCamera, _pMap);
+		bomb->Render(8, _pCamera);
 	}
 	_pPlayer->Render(_pPlayer->GetTextureId(), _pCamera);
 	RESOURCE_MANAGER->GetTexturesVector();

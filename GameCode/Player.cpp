@@ -122,9 +122,9 @@ void Player::Update(Map* _ptrMap)
 	// Bombs
 	for (auto it = _pBombs.begin(); it != _pBombs.end(); )
 	{
-		(*it)->Update(_ptrMap);
+		(*it)->Update();
 
-		if ((*it)->GetBombState() && (*it)->BombShouldBeDeleted())
+		if ((*it)->GetBombState() && (*it)->GetEliminateFlag())
 		{
 			delete* it;
 			it = _pBombs.erase(it);

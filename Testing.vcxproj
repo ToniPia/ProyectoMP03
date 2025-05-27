@@ -142,6 +142,7 @@
     <ClCompile Include="GameCode\Bomb.cpp" />
     <ClCompile Include="GameCode\Camera.cpp" />
     <ClCompile Include="GameCode\Entity.cpp" />
+    <ClCompile Include="GameCode\Explosion.cpp" />
     <ClCompile Include="GameCode\Main.cpp" />
     <ClCompile Include="GameCode\Map.cpp" />
     <ClCompile Include="GameCode\Player.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="GameCode\Bomb.h" />
     <ClInclude Include="GameCode\Camera.h" />
     <ClInclude Include="GameCode\Entity.h" />
+    <ClInclude Include="GameCode\Explosion.h" />
     <ClInclude Include="GameCode\Map.h" />
     <ClInclude Include="GameCode\Player.h" />
     <ClInclude Include="GameCode\Scene.h" />

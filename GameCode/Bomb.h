@@ -6,13 +6,6 @@
 class Camera;
 class Map;
 
-struct ExplosionParts {
-	int sourceX;
-	int sourceY;
-	int offsetX;
-	int offsetY;
-};
-
 
 //! Bomb class
 /*
@@ -26,25 +19,18 @@ public:
 	~Bomb(void);
 
 	void		Init() override;
-	void		Update(Map* _ptrMap);
-	void		Render(int _idCharacterTexture, Camera* _ptrCamera, Map* _ptrMap);
+	void		Update();
+	void		Render(int _idCharacterTexture, Camera* _ptrCamera);
 
 	void		SetBombState(bool _value) { _mHasExplodedYet = _value; };
 	bool		GetBombState() { return _mHasExplodedYet; };
-	void		SetRadiusExplosion(int _value) { _mRadius = _value; };
-	int			GetRadiusExplosion() { return _mRadius; };
-
-	bool		BombShouldBeDeleted();
-	void		GenerateExplosion(Map* _ptrMap);
-	bool		CanExplosionExpandAtOffset(int _offsetX, int _offsetY, Map* _ptrMap);
+	void		SetEliminateFlag(bool _value) { _mEliminateFlag = _value; };
+	bool		GetEliminateFlag() { return _mEliminateFlag; };
 
 private:
 	bool		_mHasExplodedYet;
-	int			_mRadius;
 	int			_mExplosionPhase[9];
 	bool		_mEliminateFlag;
-
-	std::vector<ExplosionParts>		_mExplosionParts;
 };
 
 #endif

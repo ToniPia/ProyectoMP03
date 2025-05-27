@@ -1,9 +1,6 @@
 #include "Bomb.h"
 
-#include <iostream>
-
 #include "../EngineCode/Defines.h"
-#include "../EngineCode/Helpers.h"
 #include "../EngineCode/TimeManager.h"
 #include "../EngineCode/Video.h"
 
@@ -14,13 +11,10 @@
 Bomb::Bomb(void)
 {
 	_mHasExplodedYet = false;
-	_mRadius = 0;
 	for (int i = 0; i < 9; ++i) {
 		_mExplosionPhase[i] = 0;
 	}
 	_mEliminateFlag = false;
-
-	_mExplosionParts.resize(0);
 }
 
 Bomb::Bomb(int _posXWorld, int _posYWorld)
@@ -53,29 +47,23 @@ void Bomb::Init()
 	SetRectGraphic(rectGraphicInit);
 	SetRectWorld(rectWorldInit);
 
-	SetCurrentAnimation(0);
 	SetTimeBetweenLastFrame(0);
 	SetCurrentSprite(0);
 
 	_mHasExplodedYet = false;
-	_mRadius = 1;
 	int values[9] = { 1, 2, 1, 0, 1, 2, 1, 0, 1 };
 	for (int i = 0; i < 9; ++i) {
 		_mExplosionPhase[i] = values[i];
 	}
 	_mEliminateFlag = false;
 
-	_mExplosionParts.clear();
-
 	AddNewAnimation(Animation{ 10, 600, 64, 0, 64, 64 });
-	AddNewAnimation(Animation{ 5, 400, 192, 0, 64, 64 });
 }
 
-void Bomb::Update(Map* _ptrMap)
+void Bomb::Update()
 {
 	int deltaTime = TIME_MANAGER->GetDeltaTime();
 
-	SetCurrentAnimation(_mHasExplodedYet ? 1 : 0);
 	SetTimeBetweenLastFrame(GetTimeBetweenLastFrame() + deltaTime);
 
 	// Animations
@@ -89,18 +77,10 @@ void Bomb::Update(Map* _ptrMap)
 			_mHasExplodedYet = true;
 			SetCurrentSprite(0);
 		}
-		else if (_mHasExplodedYet && GetCurrentSprite() > 4)
-		{
-			_mEliminateFlag = true;
-		}
-	}
-	if (_mHasExplodedYet && _mExplosionParts.empty())
-	{
-		GenerateExplosion(_ptrMap);
 	}
 }
 
-void Bomb::Render(int _idCharacterTexture, Camera* _ptrCamera, Map* _ptrMap)
+void Bomb::Render(int _idCharacterTexture, Camera* _ptrCamera)
 {
 	if (_mHasExplodedYet == false)
 	{
@@ -119,76 +99,4 @@ void Bomb::Render(int _idCharacterTexture, Camera* _ptrCamera, Map* _ptrMap)
 
 		Entity::Render(_idCharacterTexture, GetRectGraphic(), renderRect);
 	}
-	else if (_mHasExplodedYet == true)
-	{
-		int frame = GetCurrentSprite();
-		for (const auto& part : _mExplosionParts)
-		{
-			SDL_Rect srcRect = {
-				part.sourceX,
-				part.sourceY,
-				GetWidthWorld(),
-				GetHeightWorld()
-			};
-			SDL_Rect destRect = {
-				GetPosXWorld() + part.offsetX - _ptrCamera->GetPosX(),
-				GetPosYWorld() + part.offsetY - _ptrCamera->GetPosY(),
-				GetWidthWorld(),
-				GetHeightWorld()
-			};
-			Entity::Render(_idCharacterTexture, srcRect, destRect);
-		}
-	}
-}
-
-bool Bomb::BombShouldBeDeleted()
-{
-	return _mEliminateFlag;
-}
-
-void Bomb::GenerateExplosion(Map* _ptrMap)
-{
-	int tileSize = 64;
-	_mExplosionParts.push_back({ 64, 0, 0, 0 }); // Nexus
-
-	for (int i = 1; i <= _mRadius; ++i)
-	{
-		// Up
-		if (CanExplosionExpandAtOffset(0, -i * tileSize, _ptrMap)) {
-			int spriteX = ((GetCurrentSprite() == 4) ? 0 : GetCurrentSprite() * 64);
-			_mExplosionParts.push_back({ spriteX, 64, 0, -i * tileSize });
-		}
-		else break;
-
-		// Right
-		if (CanExplosionExpandAtOffset(i * tileSize, 0, _ptrMap)) {
-			int spriteX = 256 + ((GetCurrentSprite() == 4) ? 0 : GetCurrentSprite() * 64);
-			_mExplosionParts.push_back({ spriteX, 64, i * tileSize, 0 });
-		}
-		else break;
-
-		// Down
-		if (CanExplosionExpandAtOffset(0, i * tileSize, _ptrMap)) {
-			int spriteX = ((GetCurrentSprite() == 4) ? 0 : GetCurrentSprite() * 64);
-			_mExplosionParts.push_back({ spriteX, 192, 0, i * tileSize });
-		}
-		else break;
-
-		// Left
-		if (CanExplosionExpandAtOffset(-i * tileSize, 0, _ptrMap)) {
-			int spriteX = 256 + ((GetCurrentSprite() == 4) ? 0 : GetCurrentSprite() * 64);
-			_mExplosionParts.push_back({ spriteX, 192, -i * tileSize, 0 });
-		}
-		else break;
-	}
-}
-
-bool Bomb::CanExplosionExpandAtOffset(int _offsetX, int _offsetY, Map* _ptrMap)
-{
-	int worldX = GetPosXWorld() + _offsetX;
-	int worldY = GetPosYWorld() + _offsetY;
-
-	Point point = { worldX, worldY };
-
-	return !_ptrMap->IsThereCollisionWithTileMap(point);
 }

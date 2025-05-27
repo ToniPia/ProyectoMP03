@@ -2,7 +2,9 @@
 
 #include <iostream>
 
+#include "Defines.h"
 #include "TimeManager.h"
+#include "SceneManager.h"
 
 
 Input* Input::_pInstance = nullptr;
@@ -86,11 +88,28 @@ void Input::InitInput()
 
 void Input::UpdateInput()
 {
-	for (int i = 0; i < SDL_NUM_SCANCODES; i++)
+	if (SCENE_MANAGER->GetCurrentSceneEnum() == MAIN)
 	{
-		if (_mKeysStates[i] == Released)
+		for (int i = 0; i < SDL_NUM_SCANCODES; i++)
 		{
-			_mKeysStates[i] = OFF;
+			if (_mKeysStates[i] == Released)
+			{
+				_mKeysStates[i] = OFF;
+			}
+			if (_mKeysStates[i] == Pressed)
+			{
+				_mKeysStates[i] = Hold;
+			}
+		}
+	}
+	else if (SCENE_MANAGER->GetCurrentSceneEnum() == GAME)
+	{
+		for (int i = 0; i < SDL_NUM_SCANCODES; i++)
+		{
+			if (_mKeysStates[i] == Released)
+			{
+				_mKeysStates[i] = OFF;
+			}
 		}
 	}
 
