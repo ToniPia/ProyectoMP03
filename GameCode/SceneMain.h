@@ -23,7 +23,9 @@ public:
 
 private:
 	std::vector<int>		_mIdsTexturesVector;
+	std::vector<int>		_mIdsSoundsVector;
 	bool					_mAllTexturesLoaded;
+	bool					_mAllSoundsLoaded;
 	int						_mArrowPosY;
 };
 

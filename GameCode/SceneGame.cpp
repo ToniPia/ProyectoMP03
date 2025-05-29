@@ -6,6 +6,7 @@
 #include "../EngineCode/Defines.h"
 #include "../EngineCode/ResourceManager.h"
 #include "../EngineCode/Video.h"
+#include "../EngineCode/Audio.h"
 #include "../EngineCode/Input.h"
 #include "../EngineCode/SceneManager.h"
 
@@ -21,7 +22,10 @@ SceneGame::SceneGame(void)
 {
 	_mCurrentLevel = 1;
 	
+	_mIdsTexturesVector.resize(0);
+	_mIdsSoundsVector.resize(0);
 	_mAllTexturesLoaded = false;
+	_mAllSoundsLoaded = false;
 
 	_pMap = new Map();
 	_pTileset = new Tileset();
@@ -53,6 +57,16 @@ void SceneGame::Init()
 		//Check:
 		_mAllTexturesLoaded = true;
 	}
+	while (!_mAllSoundsLoaded)
+	{
+		//Sounds:
+		int idSounds[6];
+		idSounds[0] = RESOURCE_MANAGER->LoadAndGetSoundID("Assets/Sounds/QuarryPlanet.mp3");
+		_mIdsSoundsVector.push_back(idSounds[0]);
+
+		//Check:
+		_mAllSoundsLoaded = true;
+	}
 
 	_pCamera->Init();
 	std::string filePath("Assets/Levels/World" + std::to_string(1) + "/a" + std::to_string(1) + ".tmx");
@@ -65,6 +79,8 @@ void SceneGame::Init()
 
 void SceneGame::Update()
 {
+	AUDIO->PlaySound(_mIdsSoundsVector[0], -1);
+
 	for (auto bomb : _pPlayer->GetBombs()) {
 		bomb->Update();
 	}
@@ -98,4 +114,5 @@ void SceneGame::UnloadResources()
 		RESOURCE_MANAGER->RemoveTexture("Assets/Textures/Bomb1.png");
 		RESOURCE_MANAGER->RemoveTexture("Assets/Textures/Rock1.png");
 	}
+	RESOURCE_MANAGER->RemoveSound("Assets/Sounds/QuarryPlanet.mp3");
 }

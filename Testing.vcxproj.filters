@@ -28,6 +28,9 @@
     <Filter Include="Resource Files\Assets\Levels\World1">
       <UniqueIdentifier>{a0de015a-0dfb-4340-8eea-1fca4b39de39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Assets\Sounds">
+      <UniqueIdentifier>{8a9faabf-cef5-44d9-84d3-85c48196f709}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EngineCode\Audio.cpp">
@@ -195,6 +198,12 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="Assets\Levels\World1\PlanetQuarry.tsx">
       <Filter>Resource Files\Assets\Levels\World1</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Sounds\QuarryPlanet.mp3">
+      <Filter>Resource Files\Assets\Sounds</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Sounds\Title.mp3">
+      <Filter>Resource Files\Assets\Sounds</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

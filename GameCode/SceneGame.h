@@ -34,7 +34,10 @@ public:
 private:
 	int						_mCurrentLevel;
 
+	std::vector<int>		_mIdsTexturesVector;
+	std::vector<int>		_mIdsSoundsVector;
 	bool					_mAllTexturesLoaded;
+	bool					_mAllSoundsLoaded;
 
 	Map*					_pMap;
 	Tileset*				_pTileset;

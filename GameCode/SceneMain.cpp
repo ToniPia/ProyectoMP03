@@ -5,6 +5,7 @@
 #include "../EngineCode/Defines.h"
 #include "../EngineCode/ResourceManager.h"
 #include "../EngineCode/Video.h"
+#include "../EngineCode/Audio.h"
 #include "../EngineCode/Input.h"
 #include "../EngineCode/SceneManager.h"
 
@@ -14,7 +15,9 @@ extern int _gameOn;
 SceneMain::SceneMain(void)
 {
 	_mIdsTexturesVector.resize(0);
+	_mIdsSoundsVector.resize(0);
 	_mAllTexturesLoaded = false;
+	_mAllSoundsLoaded = false;
 	_mArrowPosY = 0;
 }
 
@@ -47,12 +50,24 @@ void SceneMain::Init()
 		//Check:
 		_mAllTexturesLoaded = true;
 	}
+	while (!_mAllSoundsLoaded)
+	{
+		//Sounds:
+		int idSounds[6];
+		idSounds[0] = RESOURCE_MANAGER->LoadAndGetSoundID("Assets/Sounds/Title.mp3");
+		_mIdsSoundsVector.push_back(idSounds[0]);
+
+		//Check:
+		_mAllSoundsLoaded = true;
+	}
 
 	Scene::Init();
 }
 
 void SceneMain::Update()
 {
+	AUDIO->PlaySound(_mIdsSoundsVector[0], -1);
+
 	if (INPUT->GetPressedKeys(SDL_SCANCODE_UP))
 	{
 		if (_mArrowPosY != SCREEN_H / 2)
@@ -147,4 +162,5 @@ void SceneMain::UnloadResources()
 	RESOURCE_MANAGER->RemoveTexture("Assets/Textures/UI/Options.png");
 	RESOURCE_MANAGER->RemoveTexture("Assets/Textures/UI/Highscore.png");
 	RESOURCE_MANAGER->RemoveTexture("Assets/Textures/UI/Exit.png");
+	RESOURCE_MANAGER->RemoveSound("Assets/Sounds/Title.mp3");
 }
