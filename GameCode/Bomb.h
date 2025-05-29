@@ -18,7 +18,7 @@ public:
 	Bomb(int _posXWorld, int _posYWorld);
 	~Bomb(void);
 
-	void		Init() override;
+	void		Init();
 	void		Update();
 	void		Render(int _idCharacterTexture, Camera* _ptrCamera);
 

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <math.h>
 
 #include "../SDL/include/SDL.h"
 
@@ -12,6 +13,7 @@
 
 #include "Tileset.h"
 #include "Camera.h"
+#include "Rock.h"
 
 using namespace tinyxml2;
 
@@ -119,11 +121,59 @@ void Map::Init(Tileset* _ptrTileset, const char* _file)
 
 	_mMaxWidth = _mWidth * _mTileWidth;
 	_mMaxHeight = _mHeight * _mTileHeight;
+
+	for (int i = 0; i < 35; i++)
+	{
+		Rock* newRock = new Rock();
+		newRock->SetWorldPointer(this);
+		_mRocks.push_back(newRock);
+	}
+	for (int i = 0; i < _mRocks.size(); i++)
+	{
+		for (int layer = 1; layer < _mLayers.size(); layer++)
+		{
+			for (int y = 0; y < _mHeight; y++)
+			{
+				for (int x = 0; x < _mWidth; x++)
+				{
+					if (((x != 2 && y != 1) &&
+						(x != 2 && y != 2) &&
+						(x != 2 && y != 3) &&
+						(x != 3 && y != 1) &&
+						(x != 4 && y != 1)) &&
+						(_mLayers[layer][y] != 0))
+					{
+						bool flag;
+						flag = rand() % 1;
+						if (flag)
+						{
+							_mRocks[i]->SetPosXWorld(x * 64);
+							_mRocks[i]->SetPosYWorld(y * 64);
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void Map::Update()
 {
+	// Rocks
+	for (auto it = _mRocks.begin(); it != _mRocks.end(); )
+	{
+		(*it)->Update(this);
 
+		if ((*it)->GetRockState() && (*it)->GetEliminateFlag())
+		{
+			delete* it;
+			it = _mRocks.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
 }
 
 void Map::Render(Camera* _ptrCamera, int _idTilesetTexture)

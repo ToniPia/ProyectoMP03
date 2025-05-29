@@ -22,6 +22,12 @@
     <Filter Include="Resource Files\Assets\Textures\UI">
       <UniqueIdentifier>{3ad2d00d-f6a1-4fb0-a877-29002241ae4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Assets\Levels">
+      <UniqueIdentifier>{48aa67f7-a7dd-4a45-88ef-69474425d478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Assets\Levels\World1">
+      <UniqueIdentifier>{a0de015a-0dfb-4340-8eea-1fca4b39de39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EngineCode\Audio.cpp">
@@ -76,6 +82,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameCode\Explosion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCode\Rock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -137,6 +146,9 @@
     <ClInclude Include="GameCode\Explosion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameCode\Rock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="SDL2.dll">
@@ -150,9 +162,6 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="Assets\Textures\UI\Title.png">
       <Filter>Resource Files\Assets\Textures\UI</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Assets\Textures\PlanetQuarry.png">
-      <Filter>Resource Files\Assets\Textures</Filter>
     </CopyFileToFolders>
     <CopyFileToFolders Include="Assets\Textures\Player.png">
       <Filter>Resource Files\Assets\Textures</Filter>
@@ -174,6 +183,18 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="Assets\Textures\Bomb1.png">
       <Filter>Resource Files\Assets\Textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\PlanetQuarry.png">
+      <Filter>Resource Files\Assets\Textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Textures\Rock1.png">
+      <Filter>Resource Files\Assets\Textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Levels\World1\a1.tmx">
+      <Filter>Resource Files\Assets\Levels\World1</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Levels\World1\PlanetQuarry.tsx">
+      <Filter>Resource Files\Assets\Levels\World1</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

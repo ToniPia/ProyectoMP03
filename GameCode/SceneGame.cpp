@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "Player.h"
 #include "Bomb.h"
+#include "Rock.h"
 
 
 SceneGame::SceneGame(void)
@@ -27,6 +28,7 @@ SceneGame::SceneGame(void)
 	_pCamera = new Camera();
 	_pPlayer = new Player();
 	_pBomb = new Bomb();
+	_pRock = new Rock();
 }
 
 SceneGame::~SceneGame(void)
@@ -45,6 +47,7 @@ void SceneGame::Init()
 		if (_mCurrentLevel == 1)
 		{
 			_pBomb->SetTextureId(RESOURCE_MANAGER->LoadAndGetTextureID("Assets/Textures/Bomb1.png"));
+			_pRock->SetTextureId(RESOURCE_MANAGER->LoadAndGetTextureID("Assets/Textures/Rock1.png"));
 		}
 
 		//Check:
@@ -65,6 +68,10 @@ void SceneGame::Update()
 	for (auto bomb : _pPlayer->GetBombs()) {
 		bomb->Update();
 	}
+	for (auto rock : _pMap->GetRocks()) {
+		rock->Update(_pMap);
+	}
+	_pMap->Update();
 	_pPlayer->Update(_pMap);
 	_pCamera->Update(_pMap, _pPlayer);
 }
@@ -74,6 +81,9 @@ void SceneGame::Render()
 	_pMap->Render(_pCamera, _pTileset->GetTextureId());
 	for (auto bomb : _pPlayer->GetBombs()) {
 		bomb->Render(8, _pCamera);
+	}
+	for (auto rock : _pMap->GetRocks()) {
+		rock->Render(9, _pCamera);
 	}
 	_pPlayer->Render(_pPlayer->GetTextureId(), _pCamera);
 	RESOURCE_MANAGER->GetTexturesVector();
@@ -86,5 +96,6 @@ void SceneGame::UnloadResources()
 	if (_mCurrentLevel == 1)
 	{
 		RESOURCE_MANAGER->RemoveTexture("Assets/Textures/Bomb1.png");
+		RESOURCE_MANAGER->RemoveTexture("Assets/Textures/Rock1.png");
 	}
 }

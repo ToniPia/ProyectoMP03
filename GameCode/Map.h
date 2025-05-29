@@ -9,6 +9,7 @@
 
 class Tileset;
 class Camera;
+class Rock;
 
 using namespace tinyxml2;
 
@@ -39,6 +40,7 @@ public:
 	int		GetMaxWidth() { return _mMaxWidth; };
 	void	SetMaxHeight(int _value) { _mMaxHeight = _value; };
 	int		GetMaxHeight() { return _mMaxHeight; };
+	std::vector<Rock*>	GetRocks() { return _mRocks; };
 
 	void	SetNewLayer();
 	void	SetLayerValues(int _layer, int _value);
@@ -57,6 +59,8 @@ private:
 	XMLDocument		_mDocument;		/*< XMLDocument object. Used to load the map from the XML file */
 
 	std::vector<std::vector<int>>	_mLayers;
+
+	std::vector<Rock*>				_mRocks;
 };
 
 

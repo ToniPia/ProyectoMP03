@@ -146,6 +146,7 @@
     <ClCompile Include="GameCode\Main.cpp" />
     <ClCompile Include="GameCode\Map.cpp" />
     <ClCompile Include="GameCode\Player.cpp" />
+    <ClCompile Include="GameCode\Rock.cpp" />
     <ClCompile Include="GameCode\Scene.cpp" />
     <ClCompile Include="GameCode\SceneGame.cpp" />
     <ClCompile Include="GameCode\SceneMain.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="GameCode\Explosion.h" />
     <ClInclude Include="GameCode\Map.h" />
     <ClInclude Include="GameCode\Player.h" />
+    <ClInclude Include="GameCode\Rock.h" />
     <ClInclude Include="GameCode\Scene.h" />
     <ClInclude Include="GameCode\SceneGame.h" />
     <ClInclude Include="GameCode\SceneMain.h" />
@@ -193,10 +195,6 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="Assets\Textures\PlanetQuarry.png">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\</DestinationFolders>
-    </CopyFileToFolders>
     <CopyFileToFolders Include="Assets\Textures\Player.png">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\</DestinationFolders>
@@ -232,6 +230,30 @@
     <CopyFileToFolders Include="Assets\Textures\Bomb1.png">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Assets\Textures\PlanetQuarry.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Assets\Textures\Rock1.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Textures\</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Assets\Levels\World1\a1.tmx">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Levels\World1\</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Assets\Levels\World1\PlanetQuarry.tsx">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Assets\Levels\World1\</DestinationFolders>
     </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

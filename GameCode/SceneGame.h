@@ -10,6 +10,7 @@ class Tileset;
 class Camera;
 class Player;
 class Bomb;
+class Rock;
 
 
 //! SceneGame class
@@ -40,6 +41,7 @@ private:
 	Camera*					_pCamera;
 	Player*					_pPlayer;
 	Bomb*					_pBomb;
+	Rock*					_pRock;
 };
 
 #endif
